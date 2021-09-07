@@ -1,0 +1,4 @@
+packages: ./universes.cabal
+
+package diablerie
+  ghc-options: -Werror
