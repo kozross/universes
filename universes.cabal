@@ -33,6 +33,7 @@ library
   import:          lang
   exposed-modules:
     Data.Monoid.Commutative
+    Data.Monoid.Commutative.Free
     Data.Nat
     Data.Nat.Internal
     Data.Ord.Pre
@@ -48,5 +49,6 @@ library
   build-depends:
     , base        >=4.12    && <5
     , containers  >=0.6.0.1 && <0.7.0.0
+    , witherable  ^>=0.4.1
 
   hs-source-dirs:  src

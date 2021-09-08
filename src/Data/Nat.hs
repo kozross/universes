@@ -5,6 +5,10 @@ module Data.Nat
     Internal.Nat32,
     Internal.Nat64,
     Internal.Nat,
+
+    -- * Helper types
+    Internal.NatSum (..),
+    Internal.NatProduct (..),
   )
 where
 

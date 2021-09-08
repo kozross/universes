@@ -1,4 +1,6 @@
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Data.Nat.Internal
@@ -8,11 +10,15 @@ module Data.Nat.Internal
     Nat32 (..),
     Nat64 (..),
     Nat (..),
+
+    -- * Helper types
+    NatSum (..),
+    NatProduct (..),
   )
 where
 
+import Data.Kind (Type)
 import Data.Semigroup (Product (Product), Sum (Sum))
-import Data.Semirig (Semirig (AddOf, MulOf))
 import Data.Word (Word16, Word32, Word64, Word8)
 
 -- | @since 1.0
@@ -29,11 +35,6 @@ newtype Nat8 = Nat8 Word8
       Show
     )
 
--- | @since 1.0
-instance Semirig Nat8 where
-  type AddOf Nat8 = Sum Word8
-  type MulOf Nat8 = Product Word8
-
 newtype Nat16 = Nat16 Word16
   deriving
     ( -- | @since 1.0
@@ -46,11 +47,6 @@ newtype Nat16 = Nat16 Word16
     ( -- | @since 1.0
       Show
     )
-
--- | @since 1.0
-instance Semirig Nat16 where
-  type AddOf Nat16 = Sum Word16
-  type MulOf Nat16 = Product Word16
 
 newtype Nat32 = Nat32 Word32
   deriving
@@ -65,11 +61,6 @@ newtype Nat32 = Nat32 Word32
       Show
     )
 
--- | @since 1.0
-instance Semirig Nat32 where
-  type AddOf Nat32 = Sum Word32
-  type MulOf Nat32 = Product Word32
-
 newtype Nat64 = Nat64 Word64
   deriving
     ( -- | @since 1.0
@@ -82,11 +73,6 @@ newtype Nat64 = Nat64 Word64
     ( -- | @since 1.0
       Show
     )
-
--- | @since 1.0
-instance Semirig Nat64 where
-  type AddOf Nat64 = Sum Word64
-  type MulOf Nat64 = Product Word64
 
 newtype Nat = Nat Word
   deriving
@@ -101,7 +87,68 @@ newtype Nat = Nat Word
       Show
     )
 
--- | @since 1.0
-instance Semirig Nat where
-  type AddOf Nat = Sum Word
-  type MulOf Nat = Product Word
+newtype NatSum (a :: Type) = NatSum a
+  deriving
+    ( -- | @since 1.0
+      Eq,
+      -- | @since 1.0
+      Ord
+    )
+    via a
+  deriving stock
+    ( -- | @since 1.0
+      Show
+    )
+
+deriving via (Sum Word8) instance Semigroup (NatSum Nat8)
+
+deriving via (Sum Word16) instance Semigroup (NatSum Nat16)
+
+deriving via (Sum Word32) instance Semigroup (NatSum Nat32)
+
+deriving via (Sum Word64) instance Semigroup (NatSum Nat64)
+
+deriving via (Sum Word) instance Semigroup (NatSum Nat)
+
+deriving via (Sum Word8) instance Monoid (NatSum Nat8)
+
+deriving via (Sum Word16) instance Monoid (NatSum Nat16)
+
+deriving via (Sum Word32) instance Monoid (NatSum Nat32)
+
+deriving via (Sum Word64) instance Monoid (NatSum Nat64)
+
+deriving via (Sum Word) instance Monoid (NatSum Nat)
+
+newtype NatProduct (a :: Type) = NatProduct a
+  deriving
+    ( -- | @since 1.0
+      Eq,
+      -- | @since 1.0
+      Ord
+    )
+    via a
+  deriving stock
+    ( -- | @since 1.0
+      Show
+    )
+
+deriving via (Product Word8) instance Semigroup (NatProduct Nat8)
+
+deriving via (Product Word16) instance Semigroup (NatProduct Nat16)
+
+deriving via (Product Word32) instance Semigroup (NatProduct Nat32)
+
+deriving via (Product Word64) instance Semigroup (NatProduct Nat64)
+
+deriving via (Product Word) instance Semigroup (NatProduct Nat)
+
+deriving via (Product Word8) instance Monoid (NatProduct Nat8)
+
+deriving via (Product Word16) instance Monoid (NatProduct Nat16)
+
+deriving via (Product Word32) instance Monoid (NatProduct Nat32)
+
+deriving via (Product Word64) instance Monoid (NatProduct Nat64)
+
+deriving via (Product Word) instance Monoid (NatProduct Nat)

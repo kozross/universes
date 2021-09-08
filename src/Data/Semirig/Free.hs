@@ -20,8 +20,6 @@ newtype Free (a :: Type)
 instance Functor Free where
   {-# INLINEABLE fmap #-}
   fmap f (Free cb) = Free (\g -> cb (g . f))
-  {-# INLINEABLE (<$) #-}
-  x <$ Free _ = Free (\g -> g x)
 
 -- | @since 1.0
 instance Applicative Free where

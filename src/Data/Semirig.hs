@@ -32,6 +32,15 @@ import Data.IntSet (IntSet)
 import Data.Kind (Type)
 import Data.List.NonEmpty (NonEmpty)
 import Data.Map (Map)
+import Data.Nat.Internal
+  ( Nat (Nat),
+    Nat16 (Nat16),
+    Nat32 (Nat32),
+    Nat64 (Nat64),
+    Nat8 (Nat8),
+    NatProduct (NatProduct),
+    NatSum (NatSum),
+  )
 import Data.Semigroup
   ( Max (Max),
     Min (Min),
@@ -74,6 +83,31 @@ class
 instance Semirig () where
   type AddOf () = ()
   type MulOf () = ()
+
+-- | @since 1.0
+instance Semirig Nat8 where
+  type AddOf Nat8 = NatSum Nat8
+  type MulOf Nat8 = NatProduct Nat8
+
+-- | @since 1.0
+instance Semirig Nat16 where
+  type AddOf Nat16 = NatSum Nat16
+  type MulOf Nat16 = NatProduct Nat16
+
+-- | @since 1.0
+instance Semirig Nat32 where
+  type AddOf Nat32 = NatSum Nat32
+  type MulOf Nat32 = NatProduct Nat32
+
+-- | @since 1.0
+instance Semirig Nat64 where
+  type AddOf Nat64 = NatSum Nat64
+  type MulOf Nat64 = NatProduct Nat64
+
+-- | @since 1.0
+instance Semirig Nat where
+  type AddOf Nat = NatSum Nat
+  type MulOf Nat = NatProduct Nat
 
 -- | @since 1.0
 instance Semirig Natural where

@@ -15,8 +15,10 @@ module Data.Semiring
 where
 
 import Data.Coerce (coerce)
+import Data.Int (Int16, Int32, Int64, Int8)
 import Data.Kind (Type)
 import Data.Monoid.Commutative (Commutative)
+import Data.Nat (Nat, Nat16, Nat32, Nat64, Nat8)
 import Data.Semigroup (stimes)
 import Data.Semirig (Semirig (AddOf, MulOf))
 import Numeric.Natural (Natural)
@@ -35,6 +37,42 @@ class
   fromNatural = \case
     0 -> zero
     n -> coerce @(AddOf a) (stimes n mempty)
+
+-- | @since 1.0
+instance Semiring Natural
+
+-- | @since 1.0
+instance Semiring Nat8
+
+-- | @since 1.0
+instance Semiring Nat16
+
+-- | @since 1.0
+instance Semiring Nat32
+
+-- | @since 1.0
+instance Semiring Nat64
+
+-- | @since 1.0
+instance Semiring Nat
+
+-- | @since 1.0
+instance Semiring Integer
+
+-- | @since 1.0
+instance Semiring Int8
+
+-- | @since 1.0
+instance Semiring Int16
+
+-- | @since 1.0
+instance Semiring Int32
+
+-- | @since 1.0
+instance Semiring Int64
+
+-- | @since 1.0
+instance Semiring Int
 
 -- | The additive identity.
 --
