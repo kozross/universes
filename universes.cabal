@@ -43,6 +43,7 @@ library
     Data.Semirig.Bottleneck
     Data.Semirig.Free
     Data.Semiring
+    Data.Semiring.Free
     Data.Semiring.Zhegalkin
 
   other-modules:   Data.Yoneda
