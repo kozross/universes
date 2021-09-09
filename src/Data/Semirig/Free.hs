@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -11,28 +12,21 @@ where
 import Data.Kind (Type)
 import Data.Semigroup.Abelian (Abelian (factor))
 import Data.Semirig (Semirig (AddOf, MulOf), (*), (+))
+import Data.Yoneda (Yoneda (Yoneda), runYoneda)
 import Prelude hiding ((*), (+))
 
 -- | @since 1.0
 newtype Free (a :: Type)
-  = Free (forall (s :: Type). (Semirig s) => (a -> s) -> s)
-
--- | @since 1.0
-instance Functor Free where
-  {-# INLINEABLE fmap #-}
-  fmap f (Free cb) = Free (\g -> cb (g . f))
-
--- | @since 1.0
-instance Applicative Free where
-  {-# INLINEABLE pure #-}
-  pure x = Free (\g -> g x)
-  {-# INLINEABLE (<*>) #-}
-  Free cbf <*> Free cbx = Free (\f -> cbf (\g -> cbx (f . g)))
-
--- | @since 1.0
-instance Monad Free where
-  {-# INLINEABLE (>>=) #-}
-  Free cb >>= f = Free (\g -> cb (\x -> let Free cb' = f x in cb' g))
+  = Free (Yoneda Semirig a)
+  deriving
+    ( -- | @since 1.0
+      Functor,
+      -- | @since 1.0
+      Applicative,
+      -- | @since 1.0
+      Monad
+    )
+    via (Yoneda Semirig)
 
 -- | @since 1.0
 instance Semirig (Free a) where
@@ -49,7 +43,7 @@ interpret ::
   (a -> s) ->
   Free a ->
   s
-interpret f (Free cb) = cb f
+interpret f (Free y) = runYoneda f y
 
 -- Helpers
 
@@ -57,8 +51,8 @@ newtype AddFree (a :: Type) = AddFree a
 
 instance Semigroup (AddFree (Free a)) where
   {-# INLINEABLE (<>) #-}
-  AddFree (Free cb) <> AddFree (Free cb') =
-    AddFree (Free (\f -> cb f + cb' f))
+  AddFree (Free (Yoneda cb)) <> AddFree (Free (Yoneda cb')) =
+    AddFree (Free (Yoneda (\f -> cb f + cb' f)))
 
 -- Only the trivial factor is possible
 instance Abelian (AddFree (Free a)) where
@@ -69,5 +63,5 @@ newtype MulFree (a :: Type) = MulFree a
 
 instance Semigroup (MulFree (Free a)) where
   {-# INLINEABLE (<>) #-}
-  MulFree (Free cb) <> MulFree (Free cb') =
-    MulFree (Free (\f -> cb f * cb' f))
+  MulFree (Free (Yoneda cb)) <> MulFree (Free (Yoneda cb')) =
+    MulFree (Free (Yoneda (\f -> cb f * cb' f)))
