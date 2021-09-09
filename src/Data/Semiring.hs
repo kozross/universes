@@ -17,7 +17,6 @@ where
 import Data.Coerce (coerce)
 import Data.Int (Int16, Int32, Int64, Int8)
 import Data.Kind (Type)
-import Data.Monoid.Commutative (Commutative)
 import Data.Nat (Nat, Nat16, Nat32, Nat64, Nat8)
 import Data.Semigroup (stimes)
 import Data.Semirig (Semirig (AddOf, MulOf))
@@ -30,7 +29,7 @@ import Numeric.Natural (Natural)
 --
 -- @since 1.0
 class
-  (Commutative (AddOf a), Monoid (MulOf a), Semirig a) =>
+  (Monoid (AddOf a), Monoid (MulOf a), Semirig a) =>
   Semiring (a :: Type)
   where
   fromNatural :: Natural -> a

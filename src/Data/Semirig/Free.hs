@@ -9,6 +9,7 @@ module Data.Semirig.Free
 where
 
 import Data.Kind (Type)
+import Data.Semigroup.Abelian (Abelian (factor))
 import Data.Semirig (Semirig (AddOf, MulOf), (*), (+))
 import Prelude hiding ((*), (+))
 
@@ -55,11 +56,18 @@ interpret f (Free cb) = cb f
 newtype AddFree (a :: Type) = AddFree a
 
 instance Semigroup (AddFree (Free a)) where
+  {-# INLINEABLE (<>) #-}
   AddFree (Free cb) <> AddFree (Free cb') =
     AddFree (Free (\f -> cb f + cb' f))
+
+-- Only the trivial factor is possible
+instance Abelian (AddFree (Free a)) where
+  {-# INLINEABLE factor #-}
+  factor _ _ = []
 
 newtype MulFree (a :: Type) = MulFree a
 
 instance Semigroup (MulFree (Free a)) where
+  {-# INLINEABLE (<>) #-}
   MulFree (Free cb) <> MulFree (Free cb') =
     MulFree (Free (\f -> cb f * cb' f))

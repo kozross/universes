@@ -9,11 +9,6 @@ module Data.Semirig
   ( -- * Type class
     Semirig (..),
 
-    -- * Helper types
-    Zhegalkin (..),
-    Bottleneck (..),
-    Semirigged (..),
-
     -- * Functions
     plus,
     times,
@@ -24,34 +19,20 @@ module Data.Semirig
   )
 where
 
-import Data.Bits (Bits)
 import Data.Coerce (Coercible, coerce)
 import Data.Int (Int16, Int32, Int64, Int8)
-import Data.IntMap (IntMap)
 import Data.IntSet (IntSet)
 import Data.Kind (Type)
 import Data.List.NonEmpty (NonEmpty)
-import Data.Map (Map)
-import Data.Nat.Internal
-  ( Nat (Nat),
-    Nat16 (Nat16),
-    Nat32 (Nat32),
-    Nat64 (Nat64),
-    Nat8 (Nat8),
-    NatProduct (NatProduct),
-    NatSum (NatSum),
-  )
 import Data.Semigroup
-  ( Max (Max),
-    Min (Min),
-    Product (Product),
+  ( Product (Product),
     Sum (Sum),
     sconcat,
   )
+import Data.Semigroup.Abelian (Abelian)
 import Data.Semigroup.Bitwise
   ( BAnd (BAnd),
     BIor (BIor),
-    BXor (..),
   )
 import Data.Semigroup.Intersectional (Intersectional (..))
 import Data.Set (Set)
@@ -61,7 +42,6 @@ import Prelude hiding ((*), (+))
 
 -- | = Laws
 --
--- * @x '+' y = y '+' x@ (commutativity of '+')
 -- * @x '*' (y '+' z) = (x '*' y) '+' (x '*' z) (left distributivity of '*'
 --   over '+')
 -- * @(x '+' y) '*' z = (x '*' z) '+' (y '*' z) (right distributivity of '*'
@@ -69,7 +49,7 @@ import Prelude hiding ((*), (+))
 --
 -- @since 1.0
 class
-  ( Semigroup (AddOf a),
+  ( Abelian (AddOf a),
     Semigroup (MulOf a),
     Coercible (AddOf a) a,
     Coercible (MulOf a) a
@@ -83,31 +63,6 @@ class
 instance Semirig () where
   type AddOf () = ()
   type MulOf () = ()
-
--- | @since 1.0
-instance Semirig Nat8 where
-  type AddOf Nat8 = NatSum Nat8
-  type MulOf Nat8 = NatProduct Nat8
-
--- | @since 1.0
-instance Semirig Nat16 where
-  type AddOf Nat16 = NatSum Nat16
-  type MulOf Nat16 = NatProduct Nat16
-
--- | @since 1.0
-instance Semirig Nat32 where
-  type AddOf Nat32 = NatSum Nat32
-  type MulOf Nat32 = NatProduct Nat32
-
--- | @since 1.0
-instance Semirig Nat64 where
-  type AddOf Nat64 = NatSum Nat64
-  type MulOf Nat64 = NatProduct Nat64
-
--- | @since 1.0
-instance Semirig Nat where
-  type AddOf Nat = NatSum Nat
-  type MulOf Nat = NatProduct Nat
 
 -- | @since 1.0
 instance Semirig Natural where
@@ -187,103 +142,6 @@ instance (Ord a) => Semirig (Set a) where
 instance Semirig IntSet where
   type AddOf IntSet = IntSet
   type MulOf IntSet = Intersectional IntSet
-
--- | '+' is union, '*' is intersection. Different values for identical keys are
--- handled according to the value type's '<>'.
---
--- @since 1.0
-instance (Ord k, Semigroup v) => Semirig (Map k v) where
-  type AddOf (Map k v) = Map k v
-  type MulOf (Map k v) = Intersectional (Map k v)
-
--- | '+' is union, '*' is intersection. Different values for identical keys are
--- handled according to the value type's '<>'.
---
--- @since 1.0
-instance (Semigroup v) => Semirig (IntMap v) where
-  type AddOf (IntMap v) = IntMap v
-  type MulOf (IntMap v) = Intersectional (IntMap v)
-
--- | [Zhegalkin
--- polynomials](https://en.wikipedia.org/wiki/Zhegalkin_polynomial).
---
--- @since 1.0
-newtype Zhegalkin (a :: Type) = Zhegalkin a
-  deriving
-    ( -- | @since 1.0
-      Eq,
-      -- | @since 1.0
-      Ord
-    )
-    via a
-  deriving stock
-    ( -- | @since 1.0
-      Show
-    )
-
--- | @since 1.0
-instance (Bits a) => Semirig (Zhegalkin a) where
-  type AddOf (Zhegalkin a) = BXor a
-  type MulOf (Zhegalkin a) = BAnd a
-
--- | @since 1.0
-newtype Semirigged (m :: Type -> Type) (a :: Type) = Semirigged (m a)
-  deriving
-    ( -- | @since 1.0
-      Eq,
-      -- | @since 1.0
-      Ord,
-      -- | @since 1.0
-      Semigroup
-    )
-    via (m a)
-  deriving stock
-    ( -- | @since 1.0
-      Show
-    )
-
--- | @since 1.0
-instance
-  (Semigroup (Intersectional (m a))) =>
-  Semigroup (Intersectional (Semirigged m a))
-  where
-  {-# INLINEABLE (<>) #-}
-  Intersectional (Semirigged sm) <> Intersectional (Semirigged sm') =
-    let Intersectional intersected = Intersectional sm <> Intersectional sm'
-     in Intersectional . Semirigged $ intersected
-
--- \'Lifts\' a 'Semirig' instance for resolution of '+' and '*' value conflicts.
---
--- @since 1.0
-instance (Ord k, Semirig v) => Semirig (Semirigged (Map k) v) where
-  type AddOf (Semirigged (Map k) v) = Map k (AddOf v)
-  type MulOf (Semirigged (Map k) v) = Map k (MulOf v)
-
--- \'Lifts\' a 'Semirig' instance for resolution of '+' and '*' value conflicts.
---
--- @since 1.0
-instance (Semirig v) => Semirig (Semirigged IntMap v) where
-  type AddOf (Semirigged IntMap v) = IntMap (AddOf v)
-  type MulOf (Semirigged IntMap v) = IntMap (MulOf v)
-
--- | @since 1.0
-newtype Bottleneck (a :: Type) = Bottleneck a
-  deriving
-    ( -- | @since 1.0
-      Eq,
-      -- | @since 1.0
-      Ord
-    )
-    via a
-  deriving stock
-    ( -- | @since 1.0
-      Show
-    )
-
--- | @since 1.0
-instance (Ord a) => Semirig (Bottleneck a) where
-  type AddOf (Bottleneck a) = Min a
-  type MulOf (Bottleneck a) = Max a
 
 -- | Additive '<>'.
 --
