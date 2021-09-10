@@ -47,5 +47,6 @@ library
   build-depends:
     , base        >=4.12    && <5
     , containers  >=0.6.0.1 && <0.7.0.0
+    , these       ^>=1.1.1.1
 
   hs-source-dirs:  src
