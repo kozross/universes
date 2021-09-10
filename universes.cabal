@@ -41,12 +41,9 @@ library
     Data.Semigroup.LCM
     Data.Semirig
     Data.Semirig.Bottleneck
-    Data.Semirig.Free
     Data.Semiring
-    Data.Semiring.Free
     Data.Semiring.Zhegalkin
 
-  other-modules:   Data.Yoneda
   build-depends:
     , base        >=4.12    && <5
     , containers  >=0.6.0.1 && <0.7.0.0

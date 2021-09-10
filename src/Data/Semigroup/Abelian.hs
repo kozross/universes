@@ -6,6 +6,7 @@ module Data.Semigroup.Abelian
   )
 where
 
+import Data.Functor.Identity (Identity (Identity))
 import Data.Int (Int16, Int32, Int64, Int8)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as ISet
@@ -16,7 +17,7 @@ import qualified Data.Set as Set
 import Numeric.Natural (Natural)
 
 -- | @since 1.0
-class (Semigroup s) => Abelian (s :: Type) where
+class (Eq s, Semigroup s) => Abelian (s :: Type) where
   -- | @since 1.0
   factor :: s -> s -> [s]
 
@@ -87,3 +88,26 @@ instance (Ord a) => Abelian (Min a) where
       LT -> [x]
       EQ -> [x]
       GT -> []
+
+-- | @since 1.0
+instance (Abelian a) => Abelian (Maybe a) where
+  {-# INLINEABLE factor #-}
+  x `factor` y = case (x, y) of
+    (Nothing, Nothing) -> [Nothing]
+    (Nothing, Just _) -> []
+    (Just x', Nothing) -> [Just x']
+    (Just x', Just y') ->
+      let factors = Just <$> factor x' y'
+       in if x' == y'
+            then Nothing : factors
+            else factors
+
+-- | @since 1.0
+instance (Abelian a) => Abelian (Identity a) where
+  {-# INLINEABLE factor #-}
+  Identity x `factor` Identity y = Identity <$> factor x y
+
+-- | @since 1.0
+instance (Abelian a, Abelian b) => Abelian (a, b) where
+  {-# INLINEABLE factor #-}
+  (x, x') `factor` (y, y') = [(z, z') | z <- x `factor` y, z' <- x' `factor` y']
