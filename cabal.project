@@ -1,4 +1,9 @@
-packages: ./universes.cabal
+packages: 
+  ./abel/abel.cabal
+  ./universes/universes.cabal
 
-package diablerie
+package abel
+  ghc-options: -Werror
+
+package universes
   ghc-options: -Werror
