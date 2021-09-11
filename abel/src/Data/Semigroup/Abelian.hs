@@ -12,7 +12,12 @@ import Data.Int (Int16, Int32, Int64, Int8)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as ISet
 import Data.Kind (Type)
-import Data.Semigroup (Max (Max), Min (Min), Sum (Sum))
+import Data.Semigroup
+  ( Max (Max),
+    Min (Min),
+    Product (Product),
+    Sum (Sum),
+  )
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.These (These (That, These, This))
@@ -56,9 +61,23 @@ instance Abelian (Sum Natural) where
       GT -> [x - y]
 
 -- | @since 1.0
+instance Abelian (Product Natural) where
+  {-# INLINEABLE factor #-}
+  Product x `factor` Product y =
+    Product <$> case (x, y) of
+      (0, 0) -> [0 ..]
+      (0, _) -> [0]
+      (_, 0) -> []
+      _ ->
+        let (d, r) = y `quotRem` x
+         in [d | r == 0]
+
+-- | @since 1.0
 instance Abelian (Sum Integer) where
   {-# INLINEABLE factor #-}
   Sum x `factor` Sum y = Sum <$> [x - y]
+
+-- TODO: Show problem of 'every element' for Abelian (Product Integer)
 
 -- | @since 1.0
 instance Abelian (Sum Int8) where

@@ -38,6 +38,7 @@ library
     Data.Monoid.CMM
     Data.Semigroup.Abelian
     Data.Semigroup.Bitwise
+    Data.Semigroup.Handed
     Data.Semigroup.Intersectional
 
   build-depends:
