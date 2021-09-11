@@ -35,6 +35,7 @@ common lang
 library
   import:          lang
   exposed-modules:
+    Data.Monoid.CMM
     Data.Semigroup.Abelian
     Data.Semigroup.Bitwise
     Data.Semigroup.Intersectional
