@@ -17,7 +17,6 @@ where
 import Data.Coerce (coerce)
 import Data.Int (Int16, Int32, Int64, Int8)
 import Data.Kind (Type)
-import Data.Nat (Nat, Nat16, Nat32, Nat64, Nat8)
 import Data.Semigroup (stimes)
 import Data.Semirig (Semirig (AddOf, MulOf))
 import Numeric.Natural (Natural)
@@ -32,6 +31,7 @@ class
   (Monoid (AddOf a), Monoid (MulOf a), Semirig a) =>
   Semiring (a :: Type)
   where
+  {-# INLINEABLE fromNatural #-}
   fromNatural :: Natural -> a
   fromNatural = \case
     0 -> zero
@@ -39,21 +39,6 @@ class
 
 -- | @since 1.0
 instance Semiring Natural
-
--- | @since 1.0
-instance Semiring Nat8
-
--- | @since 1.0
-instance Semiring Nat16
-
--- | @since 1.0
-instance Semiring Nat32
-
--- | @since 1.0
-instance Semiring Nat64
-
--- | @since 1.0
-instance Semiring Nat
 
 -- | @since 1.0
 instance Semiring Integer

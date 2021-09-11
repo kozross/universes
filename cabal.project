@@ -1,9 +1,13 @@
 packages: 
   ./abel/abel.cabal
-  ./universes/universes.cabal
+  ./semirigs/semirigs.cabal
+  ./naturals/naturals.cabal
 
 package abel
   ghc-options: -Werror
 
-package universes
+package semirigs
+  ghc-options: -Werror
+
+package naturals
   ghc-options: -Werror

@@ -21,6 +21,7 @@ import Data.Kind (Type)
 import Data.Semigroup (Product (Product), Sum (Sum))
 import Data.Semigroup.Abelian (Abelian (factor))
 import Data.Semirig (Semirig (AddOf, MulOf))
+import Data.Semiring (Semiring (fromNatural))
 import Data.Word (Word16, Word32, Word64, Word8)
 
 -- | @since 1.0
@@ -43,6 +44,11 @@ instance Semirig Nat8 where
   type MulOf Nat8 = NatProduct Nat8
 
 -- | @since 1.0
+instance Semiring Nat8 where
+  {-# INLINEABLE fromNatural #-}
+  fromNatural n = Nat8 . fromIntegral $ n `rem` 256
+
+-- | @since 1.0
 newtype Nat16 = Nat16 Word16
   deriving
     ( -- | @since 1.0
@@ -60,6 +66,11 @@ newtype Nat16 = Nat16 Word16
 instance Semirig Nat16 where
   type AddOf Nat16 = NatSum Nat16
   type MulOf Nat16 = NatProduct Nat16
+
+-- | @since 1.0
+instance Semiring Nat16 where
+  {-# INLINEABLE fromNatural #-}
+  fromNatural n = Nat16 . fromIntegral $ n `rem` 65536
 
 -- | @since 1.0
 newtype Nat32 = Nat32 Word32
@@ -81,6 +92,11 @@ instance Semirig Nat32 where
   type MulOf Nat32 = NatProduct Nat32
 
 -- | @since 1.0
+instance Semiring Nat32 where
+  {-# INLINEABLE fromNatural #-}
+  fromNatural n = Nat32 . fromIntegral $ n `rem` 4294967296
+
+-- | @since 1.0
 newtype Nat64 = Nat64 Word64
   deriving
     ( -- | @since 1.0
@@ -100,6 +116,11 @@ instance Semirig Nat64 where
   type MulOf Nat64 = NatProduct Nat64
 
 -- | @since 1.0
+instance Semiring Nat64 where
+  {-# INLINEABLE fromNatural #-}
+  fromNatural n = Nat64 . fromIntegral $ n `rem` 18446744073709551616
+
+-- | @since 1.0
 newtype Nat = Nat Word
   deriving
     ( -- | @since 1.0
@@ -117,6 +138,9 @@ newtype Nat = Nat Word
 instance Semirig Nat where
   type AddOf Nat = NatSum Nat
   type MulOf Nat = NatProduct Nat
+
+-- | @since 1.0
+instance Semiring Nat
 
 -- | @since 1.0
 newtype NatSum (a :: Type) = NatSum a
