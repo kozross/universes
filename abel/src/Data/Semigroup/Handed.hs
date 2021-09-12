@@ -44,8 +44,6 @@ instance (Semigroup a, Monoid b) => Monoid (Lefty a b) where
   {-# INLINEABLE mempty #-}
   mempty = Lefty . Right $ mempty
 
--- TODO: Show 'present whole type' problem with Abelian (Lefty a b).
-
 -- | An 'Either' with a \'Right-ward\' bias.
 --
 -- @since 1.0
@@ -80,5 +78,3 @@ instance (Semigroup a, Semigroup b) => Semigroup (Righty a b) where
 instance (Monoid a, Semigroup b) => Monoid (Righty a b) where
   {-# INLINEABLE mempty #-}
   mempty = Righty . Left $ mempty
-
--- TODO: Show 'present whole type' problem with Abelian (Righty a b).

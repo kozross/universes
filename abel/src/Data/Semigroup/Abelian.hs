@@ -77,8 +77,6 @@ instance Abelian (Sum Integer) where
   {-# INLINEABLE factor #-}
   Sum x `factor` Sum y = Sum <$> [x - y]
 
--- TODO: Show problem of 'every element' for Abelian (Product Integer)
-
 -- | @since 1.0
 instance Abelian (Sum Int8) where
   {-# INLINEABLE factor #-}
