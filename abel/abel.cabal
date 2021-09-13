@@ -40,6 +40,7 @@ library
     Data.Semigroup.Bitwise
     Data.Semigroup.Handed
     Data.Semigroup.Intersectional
+    Data.Semigroup.Multiplicative
 
   build-depends:
     , base        >=4.12    && <5

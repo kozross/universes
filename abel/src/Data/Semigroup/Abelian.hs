@@ -14,12 +14,10 @@ import Data.Kind (Type)
 import Data.Semigroup
   ( Max (Max),
     Min (Min),
-    Product (Product),
   )
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.These (These (That, These, This))
-import Numeric.Natural (Natural)
 
 -- | = Laws
 --
@@ -48,18 +46,6 @@ class (Eq s, Semigroup s) => Abelian (s :: Type) where
 instance Abelian () where
   {-# INLINEABLE factor #-}
   factor _ _ = [()] -- yawn
-
--- | @since 1.0
-instance Abelian (Product Natural) where
-  {-# INLINEABLE factor #-}
-  Product x `factor` Product y =
-    Product <$> case (x, y) of
-      (0, 0) -> [0 ..]
-      (0, _) -> [0]
-      (_, 0) -> []
-      _ ->
-        let (d, r) = y `quotRem` x
-         in [d | r == 0]
 
 -- | @since 1.0
 instance (Ord a) => Abelian (Set a) where

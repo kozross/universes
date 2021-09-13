@@ -10,16 +10,13 @@ module Data.Nat.Internal
     Nat32 (..),
     Nat64 (..),
     Nat (..),
-
-    -- * Helper types
-    NatProduct (..),
   )
 where
 
-import Data.Kind (Type)
 import Data.Semigroup (Product (Product), Sum (Sum))
 import Data.Semigroup.Abelian (Abelian (factor))
 import Data.Semigroup.Additive (Additive (Additive))
+import Data.Semigroup.Multiplicative (Multiplicative (Multiplicative))
 import Data.Semirig (Semirig (AddOf, MulOf))
 import Data.Semiring (Semiring (fromNatural))
 import Data.Word (Word16, Word32, Word64, Word8)
@@ -41,7 +38,7 @@ newtype Nat8 = Nat8 Word8
 -- | @since 1.0
 instance Semirig Nat8 where
   type AddOf Nat8 = Additive Nat8
-  type MulOf Nat8 = NatProduct Nat8
+  type MulOf Nat8 = Multiplicative Nat8
 
 -- | @since 1.0
 instance Semiring Nat8 where
@@ -65,7 +62,7 @@ newtype Nat16 = Nat16 Word16
 -- | @since 1.0
 instance Semirig Nat16 where
   type AddOf Nat16 = Additive Nat16
-  type MulOf Nat16 = NatProduct Nat16
+  type MulOf Nat16 = Multiplicative Nat16
 
 -- | @since 1.0
 instance Semiring Nat16 where
@@ -89,7 +86,7 @@ newtype Nat32 = Nat32 Word32
 -- | @since 1.0
 instance Semirig Nat32 where
   type AddOf Nat32 = Additive Nat32
-  type MulOf Nat32 = NatProduct Nat32
+  type MulOf Nat32 = Multiplicative Nat32
 
 -- | @since 1.0
 instance Semiring Nat32 where
@@ -113,7 +110,7 @@ newtype Nat64 = Nat64 Word64
 -- | @since 1.0
 instance Semirig Nat64 where
   type AddOf Nat64 = Additive Nat64
-  type MulOf Nat64 = NatProduct Nat64
+  type MulOf Nat64 = Multiplicative Nat64
 
 -- | @since 1.0
 instance Semiring Nat64 where
@@ -137,7 +134,7 @@ newtype Nat = Nat Word
 -- | @since 1.0
 instance Semirig Nat where
   type AddOf Nat = Additive Nat
-  type MulOf Nat = NatProduct Nat
+  type MulOf Nat = Multiplicative Nat
 
 -- | @since 1.0
 instance Semiring Nat
@@ -203,45 +200,31 @@ instance Abelian (Additive Nat) where
     Additive . Nat <$> [x - y]
 
 -- | @since 1.0
-newtype NatProduct (a :: Type) = NatProduct a
-  deriving
-    ( -- | @since 1.0
-      Eq,
-      -- | @since 1.0
-      Ord
-    )
-    via a
-  deriving stock
-    ( -- | @since 1.0
-      Show
-    )
+deriving via (Product Word8) instance Semigroup (Multiplicative Nat8)
 
 -- | @since 1.0
-deriving via (Product Word8) instance Semigroup (NatProduct Nat8)
+deriving via (Product Word16) instance Semigroup (Multiplicative Nat16)
 
 -- | @since 1.0
-deriving via (Product Word16) instance Semigroup (NatProduct Nat16)
+deriving via (Product Word32) instance Semigroup (Multiplicative Nat32)
 
 -- | @since 1.0
-deriving via (Product Word32) instance Semigroup (NatProduct Nat32)
+deriving via (Product Word64) instance Semigroup (Multiplicative Nat64)
 
 -- | @since 1.0
-deriving via (Product Word64) instance Semigroup (NatProduct Nat64)
+deriving via (Product Word) instance Semigroup (Multiplicative Nat)
 
 -- | @since 1.0
-deriving via (Product Word) instance Semigroup (NatProduct Nat)
+deriving via (Product Word8) instance Monoid (Multiplicative Nat8)
 
 -- | @since 1.0
-deriving via (Product Word8) instance Monoid (NatProduct Nat8)
+deriving via (Product Word16) instance Monoid (Multiplicative Nat16)
 
 -- | @since 1.0
-deriving via (Product Word16) instance Monoid (NatProduct Nat16)
+deriving via (Product Word32) instance Monoid (Multiplicative Nat32)
 
 -- | @since 1.0
-deriving via (Product Word32) instance Monoid (NatProduct Nat32)
+deriving via (Product Word64) instance Monoid (Multiplicative Nat64)
 
 -- | @since 1.0
-deriving via (Product Word64) instance Monoid (NatProduct Nat64)
-
--- | @since 1.0
-deriving via (Product Word) instance Monoid (NatProduct Nat)
+deriving via (Product Word) instance Monoid (Multiplicative Nat)
