@@ -26,10 +26,10 @@ import Data.Kind (Type)
 import Data.List.NonEmpty (NonEmpty)
 import Data.Semigroup
   ( Product (Product),
-    Sum (Sum),
     sconcat,
   )
 import Data.Semigroup.Abelian (Abelian)
+import Data.Semigroup.Additive (Additive (Additive))
 import Data.Semigroup.Bitwise
   ( BAnd (BAnd),
     BIor (BIor),
@@ -66,37 +66,37 @@ instance Semirig () where
 
 -- | @since 1.0
 instance Semirig Natural where
-  type AddOf Natural = Sum Natural
+  type AddOf Natural = Additive Natural
   type MulOf Natural = Product Natural
 
 -- | @since 1.0
 instance Semirig Int8 where
-  type AddOf Int8 = Sum Int8
+  type AddOf Int8 = Additive Int8
   type MulOf Int8 = Product Int8
 
 -- | @since 1.0
 instance Semirig Int16 where
-  type AddOf Int16 = Sum Int16
+  type AddOf Int16 = Additive Int16
   type MulOf Int16 = Product Int16
 
 -- | @since 1.0
 instance Semirig Int32 where
-  type AddOf Int32 = Sum Int32
+  type AddOf Int32 = Additive Int32
   type MulOf Int32 = Product Int32
 
 -- | @since 1.0
 instance Semirig Int64 where
-  type AddOf Int64 = Sum Int64
+  type AddOf Int64 = Additive Int64
   type MulOf Int64 = Product Int64
 
 -- | @since 1.0
 instance Semirig Int where
-  type AddOf Int = Sum Int
+  type AddOf Int = Additive Int
   type MulOf Int = Product Int
 
 -- | @since 1.0
 instance Semirig Integer where
-  type AddOf Integer = Sum Integer
+  type AddOf Integer = Additive Integer
   type MulOf Integer = Product Integer
 
 -- | @since 1.0

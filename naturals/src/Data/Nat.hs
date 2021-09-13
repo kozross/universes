@@ -7,7 +7,6 @@ module Data.Nat
     Internal.Nat,
 
     -- * Helper types
-    Internal.NatSum (..),
     Internal.NatProduct (..),
   )
 where

@@ -22,7 +22,6 @@ import Data.Bits
     FiniteBits (finiteBitSize),
   )
 import Data.Kind (Type)
-import Data.Monoid.CMM (CMM (monus))
 import Data.Semigroup (stimes, stimesIdempotent)
 import Data.Semigroup.Abelian (Abelian (factor))
 
@@ -76,11 +75,6 @@ instance (FiniteBits a) => Monoid (BAnd a) where
   mempty = BAnd . complement $ zeroBits
 
 -- | @since 1.0
-instance (FiniteBits a) => CMM (BAnd a) where
-  {-# INLINEABLE monus #-}
-  BAnd x `monus` BAnd y = BAnd $ x .|. complement y
-
--- | @since 1.0
 newtype BIor (a :: Type) = BIor
   { -- | @since 1.0
     getBIor :: a
@@ -126,11 +120,6 @@ instance (FiniteBits a) => Abelian (BIor a) where
 instance (Bits a) => Monoid (BIor a) where
   {-# INLINEABLE mempty #-}
   mempty = BIor zeroBits
-
--- | @since 1.0
-instance (FiniteBits a) => CMM (BIor a) where
-  {-# INLINEABLE monus #-}
-  BIor x `monus` BIor y = BIor $ x .&. complement y
 
 -- | @since 1.0
 newtype BXor (a :: Type) = BXor
